@@ -1,12 +1,15 @@
-a = ['a','d','c','d','e','f','g','h']
+a = ['aa','bd','cc','dd','ee','ff','gg','hh']
+#a="abcdefgh"
 
 
 
 def r(v)
+	n=v
+	n = v.split("") if v.class == String 
 
-	return v[0] if v.length == 1
-	s=r(v.last(v.length-1))
-	return s + v[v.length-s.length-1]
+	return n[0].split if n.length == 1
+	s=r(n.last(n.length-1))
+	return s.push n[n.length-s.length-1]
 
 end
 
