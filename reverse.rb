@@ -1,5 +1,5 @@
 a = ['aa','bd','cc','dd','ee','ff','gg','hh']
-#a="abcdefgh"
+s="abcdefgh"
 
 
 
@@ -13,5 +13,9 @@ def r(v)
 
 end
 
-
+puts "Array reverse: #{a}"
 puts r(a)
+
+puts "String reverse: #{s}"
+puts r(s)
+
