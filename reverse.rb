@@ -4,12 +4,12 @@ a = ['aa','bd','cc','dd','ee','ff','gg','hh']
 
 
 def r(v)
-	n=v
-	n = v.split("") if v.class == String 
+	
+	v = v.split("") if v.class == String 
 
-	return n[0].split if n.length == 1
-	s=r(n.last(n.length-1))
-	return s.push n[n.length-s.length-1]
+	return v[0].split if v.length == 1
+	s=r(v.last(v.length-1))
+	return s.push v[v.length-s.length-1]
 
 end
 
