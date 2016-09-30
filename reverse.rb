@@ -1,21 +1,17 @@
-a = ['aa','bd','cc','dd','ee','ff','gg','hh']
-s="abcdefgh"
+array = ['aa','bd','cc','dd','ee','ff','gg','hh']
+str="abcdefgh"
 
+def reverse(value)
 
+	return value[0] if value.length == 1
 
-def r(v)
+	return reverse( value.slice(1..value.size) ) + value.slice(0)
 	
-	v = v.split("") if v.class == String 
-
-	return v[0].split if v.length == 1
-	s=r(v.last(v.length-1))
-	return s.push v[v.length-s.length-1]
-
 end
 
-puts "Array reverse: #{a}"
-puts r(a)
+puts "Array reverse: #{array}"
+puts reverse(array)
 
-puts "String reverse: #{s}"
-puts r(s)
+puts "String reverse: #{str}"
+puts reverse(str)
 
