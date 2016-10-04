@@ -1,4 +1,4 @@
-s="dfsfdsffgggggrewruuuuhff"
+s="dfsfdsffgggggrewruuuuhf"
 
 def Compress ( s )
 
@@ -15,7 +15,8 @@ begin
           counter=1
 	  res.concat(s[point]) if s[point] != nil
         elsif
-          res.concat(s[point])
+	    if s[point] != nil then res.concat(s[point]) 
+	    end
         end
    end
   point +=1
