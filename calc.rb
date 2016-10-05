@@ -30,8 +30,7 @@ while true do
 	puts "Cannot divide by zero!"
         next
      end 
-   when "b" then  puts "bbb"
-	result = (first_operand / (second_operand**2))		   
+   when "b" then result = (first_operand / (second_operand**2))		   
 
  else 
    puts "Unknown operation"
