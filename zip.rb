@@ -16,7 +16,7 @@ begin
         else
           if ('0'..'9') === s[point-1] then
             res.insert(res.length-1,' ')
-            res.concat(counter.to_s)
+            res.concat(counter.to_s) if counter > 1
             counter=1
           end
         end
