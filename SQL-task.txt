@@ -105,10 +105,10 @@ bool
 (1 row)
 
 
-e) SELECT * FROM Courses WHERE EXTRACT(WEEK FROM end_date) = EXTRACT(WEEK FROM NOW());
+e) SELECT c_name FROM Courses WHERE EXTRACT(WEEK FROM end_date) = EXTRACT(WEEK FROM NOW());
 
- p_id | c_name | c_tag | start_date | end_date 
-------+--------+-------+------------+----------
+ c_name 
+--------
 (0 rows)
 
 
