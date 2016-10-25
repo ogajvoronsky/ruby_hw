@@ -1,0 +1,212 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: courses; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE courses (
+    p_id integer,
+    c_name character varying(90) NOT NULL,
+    c_tag character varying(40),
+    start_date date,
+    end_date date
+);
+
+
+ALTER TABLE courses OWNER TO postgres;
+
+--
+-- Name: persons; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE persons (
+    p_id integer NOT NULL,
+    first_name character varying(40) NOT NULL,
+    last_name character varying(40) NOT NULL,
+    email character varying(80) NOT NULL
+);
+
+
+ALTER TABLE persons OWNER TO postgres;
+
+--
+-- Name: persons_p_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE persons_p_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE persons_p_id_seq OWNER TO postgres;
+
+--
+-- Name: persons_p_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE persons_p_id_seq OWNED BY persons.p_id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE tags (
+    d_tag character varying(40)
+);
+
+
+ALTER TABLE tags OWNER TO postgres;
+
+--
+-- Name: p_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY persons ALTER COLUMN p_id SET DEFAULT nextval('persons_p_id_seq'::regclass);
+
+
+--
+-- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY courses (p_id, c_name, c_tag, start_date, end_date) FROM stdin;
+1	Addictive Math	Math	2016-05-21	2016-05-30
+2	Physics around us	Physics	2016-11-01	2016-11-30
+3	Fashion Design	Design	2016-11-12	2016-11-30
+4	WEB Design	Design	2017-01-01	2017-02-16
+\.
+
+
+--
+-- Data for Name: persons; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY persons (p_id, first_name, last_name, email) FROM stdin;
+1	Anthony	Freeman	anthony@maytech.net
+2	Emilia	Prygrodska	mila@rambler.ru
+3	Olga	Mlynko	mlynkolga@gmail.com
+4	Taras	Kozak	tarskozak@gmail.com
+5	Oleg	Doskach	oleg45d@gmail.com
+6	Taras	Sosnovskyi	taras@comfort-service.com
+\.
+
+
+--
+-- Name: persons_p_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('persons_p_id_seq', 6, true);
+
+
+--
+-- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tags (d_tag) FROM stdin;
+Math
+Geography
+History
+Physics
+Literature
+Design
+\.
+
+
+--
+-- Name: courses_p_id_c_tag_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY courses
+    ADD CONSTRAINT courses_p_id_c_tag_key UNIQUE (p_id, c_tag);
+
+
+--
+-- Name: persons_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT persons_email_key UNIQUE (email);
+
+
+--
+-- Name: persons_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT persons_pkey PRIMARY KEY (p_id);
+
+
+--
+-- Name: tags_d_tag_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_d_tag_key UNIQUE (d_tag);
+
+
+--
+-- Name: courses_c_tag_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY courses
+    ADD CONSTRAINT courses_c_tag_fkey FOREIGN KEY (c_tag) REFERENCES tags(d_tag);
+
+
+--
+-- Name: courses_p_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY courses
+    ADD CONSTRAINT courses_p_id_fkey FOREIGN KEY (p_id) REFERENCES persons(p_id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
