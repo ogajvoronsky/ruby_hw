@@ -68,9 +68,52 @@ INSERT INTO Courses (p_id, c_name, c_tag, start_date, end_date) VALUES ((SELECT 
 # QUERYING
 
 a) SELECT c_name, c_tag FROM Courses;
+
+      c_name       |  c_tag  
+-------------------+---------
+ Addictive Math    | Math
+ Physics around us | Physics
+ Fashion Design    | Design
+ WEB Design        | Design
+(4 rows)
+
 b) SELECT * FROM Persons LEFT JOIN Courses ON Persons.p_id=Courses.p_id WHERE Courses.p_id IS NULL;
+
+p_id | first_name | last_name  |           email           | p_id | c_name | c_tag | start_date | end_date 
+------+------------+------------+---------------------------+------+--------+-------+------------+----------
+    5 | Oleg       | Doskach    | oleg45d@gmail.com         |      |        |       |            | 
+    6 | Taras      | Sosnovskyi | taras@comfort-service.com |      |        |       |            | 
+(2 rows)
+
 c) SELECT * FROM Tags WHERE d_tag IN (SELECT c_tag From Courses);
+
+  d_tag  
+---------
+ Math
+ Physics
+ Design
+(3 rows)
+
+
 d) SELECT TRUE From Courses WHERE c_tag='Design' LIMIT 1;
+
+bool 
+------
+ t
+(1 row)
+
+
 e) SELECT * FROM Courses WHERE EXTRACT(WEEK FROM end_date) = EXTRACT(WEEK FROM NOW());
+
+ p_id | c_name | c_tag | start_date | end_date 
+------+--------+-------+------------+----------
+(0 rows)
+
+
 f) SELECT * FROM Courses ORDER BY (end_date - start_date) DESC LIMIT 1;
+
+ p_id |   c_name   | c_tag  | start_date |  end_date  
+------+------------+--------+------------+------------
+    4 | WEB Design | Design | 2017-01-01 | 2017-02-16
+(1 row)
 
