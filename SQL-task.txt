@@ -3,7 +3,7 @@
 
 1.2. SELECT * FROM Presidents WHERE (LastName >= 'Franklin' AND LastName <= 'Roosevelt')   
 
-1.3. SELECT * FROM Salaries ORDER BY salary DESC LIMIT 10
+1.3. select salary from Salaries order by salary DESC OFFSET 9 LIMIT 1;
 
 
 2.1 
