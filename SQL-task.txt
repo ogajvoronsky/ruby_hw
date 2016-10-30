@@ -97,7 +97,7 @@ c) SELECT * FROM Tags WHERE d_tag IN (SELECT c_tag From Courses);
 (3 rows)
 
 
-d) SELECT TRUE From Courses WHERE c_tag='Design' LIMIT 1;
+d) SELECT EXISTS (SELECT 1 From Courses WHERE c_tag='Design');
 
 bool 
 ------
