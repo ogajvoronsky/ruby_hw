@@ -17,36 +17,41 @@ CREATE DATABASE sql_task;
 # CREATE Tables
 
 CREATE TABLE Tags (
-	d_tag VARCHAR(40) UNIQUE
+	discipline_tag VARCHAR(40) UNIQUE
         );
 
 
 CREATE TABLE Persons (
-        p_id serial NOT NULL,
+        person_id serial NOT NULL UNIQUE,
         first_name varchar(40) NOT NULL,
         last_name varchar(40) NOT NULL,
         email varchar(80) NOT NULL UNIQUE,
-        PRIMARY KEY (p_id)
+        PRIMARY KEY (person_id)
         );
 
 CREATE TABLE Courses (
-	p_id INT REFERENCES Persons(p_id),
-	c_name VARCHAR(90) NOT NULL,
-	c_tag VARCHAR(40) REFERENCES Tags(d_tag),
+	course_id serial NOT NULL UNIQUE,
+	course_name VARCHAR(90) NOT NULL,
+	course_tag VARCHAR(40) REFERENCES Tags(discipline_tag),
 	start_date DATE,
-	end_date DATE,
-	UNIQUE (p_id, c_tag)
+	end_date DATE
 	);
 	
+CREATE TABLE person_course_join_table (
+	person INT REFERENCES Persons(person_id),
+	course INT REFERENCES Courses(course_id),
+	UNIQUE (person, course)
+	);
+
 
 # Populate some data
 
-INSERT INTO Tags (d_tag) VALUES ('Math');
-INSERT INTO Tags (d_tag) VALUES ('Geography');
-INSERT INTO Tags (d_tag) VALUES ('History');
-INSERT INTO Tags (d_tag) VALUES ('Physics');
-INSERT INTO Tags (d_tag) VALUES ('Literature');
-INSERT INTO Tags (d_tag) VALUES ('Design');
+INSERT INTO Tags (discipline_tag) VALUES ('Math');
+INSERT INTO Tags (discipline_tag) VALUES ('Geography');
+INSERT INTO Tags (discipline_tag) VALUES ('History');
+INSERT INTO Tags (discipline_tag) VALUES ('Physics');
+INSERT INTO Tags (discipline_tag) VALUES ('Literature');
+INSERT INTO Tags (discipline_tag) VALUES ('Design');
 
 
 INSERT INTO Persons (first_name, last_name, email) VALUES ('Anthony','Freeman','anthony@maytech.net');
@@ -57,19 +62,23 @@ INSERT INTO Persons (first_name, last_name, email) VALUES ('Oleg','Doskach','ole
 INSERT INTO Persons (first_name, last_name, email) VALUES ('Taras','Sosnovskyi','taras@comfort-service.com');
 
 
-INSERT INTO Courses (p_id, c_name, c_tag, start_date, end_date) VALUES ((SELECT p_id FROM Persons LIMIT 1),'Addictive Math','Math','2016-05-21','2016-05-30');
-INSERT INTO Courses (p_id, c_name, c_tag, start_date, end_date) VALUES ((SELECT p_id FROM Persons LIMIT 1 OFFSET 1),'Physics around us','Physics','2016-11-01','2016-11-30');
-INSERT INTO Courses (p_id, c_name, c_tag, start_date, end_date) VALUES ((SELECT p_id FROM Persons LIMIT 1 OFFSET 2),'Fashion Design','Design','2016-11-12','2016-11-30');
-INSERT INTO Courses (p_id, c_name, c_tag, start_date, end_date) VALUES ((SELECT p_id FROM Persons LIMIT 1 OFFSET 3),'WEB Design','Design','2017-01-01','2017-02-16');
+INSERT INTO Courses (course_name, course_tag, start_date, end_date) VALUES ('Addictive Math','Math','2016-10-21','2016-11-02');
+INSERT INTO Courses (course_name, course_tag, start_date, end_date) VALUES ('Physics around us','Physics','2016-11-01','2016-11-30');
+INSERT INTO Courses (course_name, course_tag, start_date, end_date) VALUES ('Fashion Design','Design','2016-11-12','2016-11-30');
+INSERT INTO Courses (course_name, course_tag, start_date, end_date) VALUES ('WEB Design','Design','2017-01-01','2017-02-16');
 
+INSERT INTO person_course_join_table (person, course) VALUES ((SELECT person_id FROM Persons LIMIT 1), (SELECT course_id FROM Courses LIMIT 1) );
+INSERT INTO person_course_join_table (person, course) VALUES ((SELECT person_id FROM Persons LIMIT 1 OFFSET 1), (SELECT course_id FROM Courses LIMIT 1 OFFSET 1) );
+INSERT INTO person_course_join_table (person, course) VALUES ((SELECT person_id FROM Persons LIMIT 1 OFFSET 2), (SELECT course_id FROM Courses LIMIT 1 OFFSET 2) );
+INSERT INTO person_course_join_table (person, course) VALUES ((SELECT person_id FROM Persons LIMIT 1 OFFSET 3), (SELECT course_id FROM Courses LIMIT 1 OFFSET 3) );
 
 
 
 # QUERYING
 
-a) SELECT c_name, c_tag FROM Courses;
+a) SELECT course_name, course_tag FROM Courses;
 
-      c_name       |  c_tag  
+      course_name       |  course_tag  
 -------------------+---------
  Addictive Math    | Math
  Physics around us | Physics
@@ -78,7 +87,7 @@ a) SELECT c_name, c_tag FROM Courses;
 (4 rows)
 
 
-b) SELECT first_name,Last_name,email FROM Persons LEFT JOIN Courses ON Persons.p_id=Courses.p_id WHERE Courses.p_id IS NULL;
+b) SELECT first_name,Last_name,email FROM Persons LEFT JOIN person_course_join_table ON Persons.person_id=person_course_join_table.person where person_course_join_table.person IS NULL;
 
  first_name | last_name  |           email           
 ------------+------------+---------------------------
@@ -87,9 +96,9 @@ b) SELECT first_name,Last_name,email FROM Persons LEFT JOIN Courses ON Persons.p
 (2 rows)
 
 
-c) SELECT * FROM Tags WHERE d_tag IN (SELECT c_tag From Courses);
+c) SELECT * FROM Tags WHERE discipline_tag IN (SELECT course_tag From Courses);
 
-  d_tag  
+  discipline_tag  
 ---------
  Math
  Physics
@@ -97,7 +106,7 @@ c) SELECT * FROM Tags WHERE d_tag IN (SELECT c_tag From Courses);
 (3 rows)
 
 
-d) SELECT EXISTS (SELECT 1 From Courses WHERE c_tag='Design');
+d) SELECT EXISTS (SELECT 1 From Courses WHERE course_tag='Design');
 
 bool 
 ------
@@ -105,16 +114,17 @@ bool
 (1 row)
 
 
-e) SELECT c_name FROM Courses WHERE EXTRACT(WEEK FROM end_date) = EXTRACT(WEEK FROM NOW());
+e) SELECT course_name FROM Courses WHERE EXTRACT(WEEK FROM end_date) = EXTRACT(WEEK FROM NOW());
 
- c_name 
---------
-(0 rows)
+ course_name   
+----------------
+ Addictive Math
+(1 row)
 
 
 f) SELECT * FROM Courses ORDER BY (end_date - start_date) DESC LIMIT 1;
 
- p_id |   c_name   | c_tag  | start_date |  end_date  
+ person_id |   course_name   | course_tag  | start_date |  end_date  
 ------+------------+--------+------------+------------
     4 | WEB Design | Design | 2017-01-01 | 2017-02-16
 (1 row)
